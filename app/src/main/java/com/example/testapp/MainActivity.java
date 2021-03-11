@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
@@ -35,6 +36,9 @@ import java.util.Vector;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+//    private static final String TAG = "MainActivity";
+//    Context context;
+//    ActivityMainBinding binding;
     ImageView imgArrowBack;
     WebView web;
 
@@ -85,7 +89,9 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setBuiltInZoomControls(true);
 
-        String url = "https://webrtc.github.io/samples/src/content/devices/input-output/";
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+
+        String url = "https://youdsqubisa123.herokuapp.com/";
 
         web.setWebViewClient(new Callback());
 //        web.setWebViewClient(new WebViewClient(){
@@ -96,9 +102,16 @@ public class MainActivity extends AppCompatActivity {
 //        });
         web.setWebChromeClient(new WebChromeClient() {
             @Override
-            public void onPermissionRequest(PermissionRequest request) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    request.grant(request.getResources());
+            public void onPermissionRequest(final PermissionRequest request) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    request.grant(request.getResources());
+//                }
+                final String[] requestedResources = request.getResources();
+                for (String r : requestedResources) {
+                    if (r.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) {
+                        request.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                        break;
+                    }
                 }
             }
         });
